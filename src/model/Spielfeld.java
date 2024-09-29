@@ -12,7 +12,7 @@ import java.util.Random;
 
 public class Spielfeld extends JPanel implements ActionListener {
     static final int EINHEITEN_PRO_SEITE = 20;
-    static final int PANEL_PIXEL = 800;
+    static final int PANEL_PIXEL = 900;
     static final int EINHEITEN_PIXEL = PANEL_PIXEL / EINHEITEN_PRO_SEITE;
     static final int PROZENT = 20;
     private String[][] spielfeld;
