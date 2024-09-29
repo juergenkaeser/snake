@@ -1,5 +1,7 @@
 package controller;
 
+import model.Spielfeld;
+
 import java.util.ArrayList;
 
 public class Schlange {
@@ -54,6 +56,11 @@ public class Schlange {
                 punkte++;
             } else {
                 punkte += 100;
+            }
+
+            // Test, ob es sich um einen Extra-Apfel handelt. Dadurch verlangsamt ich das Spiel.
+            if (spielfeld[this.y][this.x].equals("E")) {
+                Spielfeld.setWartezeit(Spielfeld.getWartezeit() + 50);
             }
 
             // Test, ob Schlange sich selbst frisst

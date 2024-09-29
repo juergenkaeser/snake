@@ -17,7 +17,7 @@ public class Spielfeld extends JPanel implements ActionListener {
     static final int PROZENT = 20;
     private String[][] spielfeld;
     private Schlange schlange;
-    private int wartezeit = 250;
+    private static int wartezeit = 250;
     private String aktuelleTaste = "w";
     private int zeileApfel, spalteApfel;
     private Random random = new Random();
@@ -37,6 +37,14 @@ public class Spielfeld extends JPanel implements ActionListener {
 
     public void setSchlange(Schlange schlange) {
         this.schlange = schlange;
+    }
+
+    public static int getWartezeit() {
+        return wartezeit;
+    }
+
+    public static void setWartezeit(int wartezeit) {
+        Spielfeld.wartezeit = wartezeit;
     }
 
     public void starteSpiel() {
@@ -63,6 +71,9 @@ public class Spielfeld extends JPanel implements ActionListener {
                 } else if (spielfeld[zeile][spalte].equals("A")) {
                     g.setColor(new Color(238, 255, 247));
                     g.fillOval(spalte * EINHEITEN_PIXEL, zeile * EINHEITEN_PIXEL, EINHEITEN_PIXEL, EINHEITEN_PIXEL);
+                } else if (spielfeld[zeile][spalte].equals("E")) {
+                    g.setColor(new Color(77, 222, 150));
+                    g.fillOval(spalte * EINHEITEN_PIXEL, zeile * EINHEITEN_PIXEL, EINHEITEN_PIXEL, EINHEITEN_PIXEL);
                 } else if (spielfeld[zeile][spalte].equals("S")) {
                     if (schlange.getX() == spalte && schlange.getY() == zeile) {
                         g.setColor(new Color(77, 222, 150)); // Farbe Kopf der Schlange
@@ -77,7 +88,7 @@ public class Spielfeld extends JPanel implements ActionListener {
         g.setColor(new Color(160, 160, 174));
         g.setFont( new Font("Dialog",Font.BOLD, 36));
         FontMetrics metrics = getFontMetrics(g.getFont());
-        g.drawString("Punkte: "+ schlange.getPunkte(), (PANEL_PIXEL - metrics.stringWidth("Punkte: "+ schlange.getPunkte()))/2, g.getFont().getSize());
+        g.drawString("Punkte: " + schlange.getPunkte() + "     Tempo: " + wartezeit, (PANEL_PIXEL - metrics.stringWidth("Punkte: "+ schlange.getPunkte() + "     Tempo: " + wartezeit))/2, g.getFont().getSize());
     }
 
     public void setApfel() {
@@ -85,13 +96,18 @@ public class Spielfeld extends JPanel implements ActionListener {
             zeileApfel = (int) (Math.random() * (EINHEITEN_PRO_SEITE- 2)) + 1;
             spalteApfel = (int) (Math.random() * (EINHEITEN_PRO_SEITE- 2)) + 1;
         } while (spielfeld[zeileApfel][spalteApfel].equals("S")); // Apfel darf nicht auf Schlange gesetzt werden
-        spielfeld[zeileApfel][spalteApfel] = "A";
+
+        if (Math.random() * 100 < PROZENT / 4) {
+            spielfeld[zeileApfel][spalteApfel] = "E";
+        } else {
+            spielfeld[zeileApfel][spalteApfel] = "A";
+        }
     }
 
     public boolean keinApfelVorhanden() {
         for (int zeile = 0; zeile < EINHEITEN_PRO_SEITE; zeile++) {
             for (int spalte = 0; spalte < EINHEITEN_PRO_SEITE; spalte++) {
-                if (spielfeld[zeile][spalte].equals("A")) {
+                if (spielfeld[zeile][spalte].equals("A") || spielfeld[zeile][spalte].equals("E")) {
                     return false;
                 }
             }
